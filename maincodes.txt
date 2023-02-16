@@ -1,0 +1,5 @@
+pip install crispy-bootstrap5 crispy-form to be able using bootstrap5
+ python3 -m pip install --upgrade pip
+ django-admin startproject website
+
+
