@@ -1,5 +1,53 @@
-pip install crispy-bootstrap5 crispy-form to be able using bootstrap5
+python3 -m pip install django
+https://jeanluc.retool.com/Imbata_ used to view your data in data in databse and help in visualization with graph u want
+pip install crispy-bootstrap5  to be able using bootstrap5
+
+remember this settings
+#CRISPY_ALLOWED_TEMPLATE_PACKS="bootstrap5"
+#CRISPY_TEMPLATE_PACK="bootstrap5"
+
+if not you see this error 
+AttributeError at /login/
+'Settings' object has no attribute 'CRISPY_TEMPLATE_PACK'
+
+
+pip3 install --user django-crispy-forms but once you installed bootstrap you don't need to run this anymore all included
  python3 -m pip install --upgrade pip
  django-admin startproject website
+ cd website then python3 manage.py startapp main
+
+ add app in settings.py 
+ ,
+ 'main.apps.MainConfig', this MainConfig class come from app.py in our main app folder
+ 'crispy_bootstrap5',
+ 'crispy_forms',
+
+ pip3 install psycopg2-binary to work with database
+ sudo -u postgres  psql
+ create database django_website
+ grant all privileges on database django_website to nshimiyimana;  to grant privileges
+
+  \d+ table_name to check field u have in ur table
+
+
+ 
+how to connect on specific postgresql database
+psql -h localhost -U nshimiyimana -d django_website -W
+
+to check logins
+django_website=> select * from auth_user;
+
+after run python3 manage.py migrate we are are to see all relations or tables we have in our database
+django_website=> \d
+                          List of relations
+ Schema |               Name                |   Type   |    Owner     
+--------+-----------------------------------+----------+--------------
+ public | auth_group                        | table    | nshimiyimana
+ public | auth_group_id_seq                 | sequence | nshimiyimana
+ public | auth_group_permissions            | table    | nshimiyimana
+
+ https://docs.djangoproject.com/en/4.1/topics/auth/default/#topic-authorization
+
+
 
 
