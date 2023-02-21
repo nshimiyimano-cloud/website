@@ -1,19 +1,50 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm
+from .forms import RegisterForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
+from .models import Post
+
 
 # Create your views here.
 
 @login_required(login_url='/login')
 def home(request):
-    return render(request,'main/home.html')
+    posts= Post.objects.all();
+    if request.method == 'POST':
+        post_id=request.POST.get('post-id');
+        post = Post.objects.filter(id=post_id).first()
+        if post and post.author == request.user:
+            post.delete()
+
+
+
+    return render(request,'main/home.html',{"posts":posts})
+
+#save(commit=True) means all field in model will be directly create in database
+#save(commit=False) eg on post in model u have created_at&updated_at fields but not in form for this you will save after show specific field you are submiting in form without exactly save in db as you click save button
+
+@login_required(login_url='/login')
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post= form.save(commit= False)
+            post.author =request.user       #commit=false we specify submitted fields
+            post.save()
+
+            return redirect('/home')
+
+    else:
+        form = PostForm()
+        return render(request,'main/create_post.html',{"form":form})
+
+
 
 def sign_up(request):
     if request.method== 'POST':
         form=RegisterForm(request.POST)
 
-        if form.is_valid:
+        if form.is_valid():
             user = form.save()
             login(request, user)
 
