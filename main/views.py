@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_list_or_404
 from .forms import RegisterForm, PostForm
-from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login, logout, authenticate
-from .models import Post
+from .models import Post,Category,Product
 
 
 # Create your views here.
@@ -24,6 +25,8 @@ def home(request):
 #save(commit=False) eg on post in model u have created_at&updated_at fields but not in form for this you will save after show specific field you are submiting in form without exactly save in db as you click save button
 
 @login_required(login_url='/login')
+@permission_required("main.add_post", login_url="/login", raise_exception=True)
+
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -54,5 +57,26 @@ def sign_up(request):
     else:
         form = RegisterForm()
     return render(request, 'registration/sign_up.html', {'form':form}) #this is the form we are using with filter crispy in signup&login template
+
+
+    # shopping project views 
+
+
+def product_list(request, category_slug=None):
+    category = None 
+    categories = Category.objects.all()
+    products = Product.objects.filter(available = True)
+
+    if category_slug:
+        category = get_list_or_404(Category, slug = category_slug)
+        products = products.filter(category = category)
+    return render(request,'main/product/list.html',{'category':category,'categories' : categories,
+    'products' :products})
+
+
+def product_detail(request, id, slug):
+    product = get_list_or_404(Product, id=id, slug=slug, available= True)
+    return render(request,'main/product/detail.html', {'product':product})
+
 
      
